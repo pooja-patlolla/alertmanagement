@@ -49,7 +49,6 @@ const Alertpage = () => {
 
   return (
     <>
-
       <div
         style={{
           position: "fixed",
