@@ -9,12 +9,43 @@ import {
   Modal,
   Text,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Image1 from "./assets/emergency-icon.png";
 import QRCode from "./assets/QR_code.png";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import mqtt from 'mqtt';
 
 const Alertpage = () => {
   const [opened, setOpened] = useState(false);
+  const [location, setLocation] = useState('');
+  
+
+
+  useEffect(() => {
+    const mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
+
+    mqttClient.on('connect', () => {
+      console.log('Connected to MQTT Broker');
+      mqttClient.subscribe('React');
+    });
+
+    mqttClient.on('message', (topic, message) => {
+      console.log(`Received message: ${message.toString()} on topic: ${topic}`);
+      try {
+        const data = JSON.parse(message.toString());
+        if (data.location) {
+          setLocation(data.location);
+          if (!opened) setOpened(true);
+        }
+      } catch (error) {
+        console.error('Invalid JSON data:', error);
+      }
+    });
+
+    return () => {
+      mqttClient.end();
+    };
+  }, [opened]);
 
   return (
     <>
@@ -70,7 +101,7 @@ const Alertpage = () => {
           >
             Help is on its way with just a TAP!
           </Text>
-          <Button
+          {/* <Button
             mt="xl"
             size="md"
             color="blue"
@@ -78,13 +109,13 @@ const Alertpage = () => {
             onClick={() => setOpened(true)}
           >
             Show Details
-          </Button>
+          </Button> */}
         </Center>
       </Container>
 
 
       <Modal
-        opened={opened}
+        opened={opened && location}
         onClose={() => setOpened(false)}
         withCloseButton={false}
         size="lg"
@@ -130,7 +161,18 @@ const Alertpage = () => {
               <Text fw={700} fz="22px">Name</Text>
               <Text fw={700} fz="22px" mt="md">Contact No.</Text>
               <Text fw={700} fz="22px" mt="md">Tag ID</Text>
-              <Text fw={700} fz="22px" mt="md">Location</Text>
+              {/* <Text fw={700} fz="22px" mt="md">Location</Text> */}
+              <Text fw={700} fz="22px" mt="md">Location:{location}</Text>
+          {location && (
+            <a
+              href={location}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 text-blue-500 hover:text-blue-700"
+            >
+              <FaMapMarkerAlt size={24} />
+            </a>
+          )}
             </div>
 
 
@@ -160,7 +202,6 @@ const Alertpage = () => {
             </div>
           </div>
         </Card>
-
       </Modal>
     </>
   );
