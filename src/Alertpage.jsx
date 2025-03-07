@@ -10,7 +10,7 @@ import {
   Modal,
   Text,
 } from "@mantine/core";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image1 from "./assets/emergency-icon.png";
 import QRCode from "./assets/alert.png";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -19,10 +19,11 @@ import mqtt from 'mqtt';
 const Alertpage = () => {
   const [opened, setOpened] = useState(false);
   const [location, setLocation] = useState('');
-  
+
 
 
   useEffect(() => {
+
     const mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt');
 
     mqttClient.on('connect', () => {
@@ -138,44 +139,44 @@ const Alertpage = () => {
         }}
       >
         <Card
-          
+
           padding="lg"
           h="20rem"
           radius="lg"
           style={{
             maxWidth: '25rem',
             width: "100%",
-            height:'30rem',
+            height: '30rem',
             borderRadius: "12px",
             backgroundColor: "white",
             border: "none",
           }}
         >
 
-<div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "20px",
-              }}
-            >
-              <Image src={QRCode} width={150} />
-              <Text mt="sm" fz="16px" fw={600}>
-                Scan QR for details
-              </Text>
-            </div>
-            <Divider
-              orientation='horizontal'
-              size="xs"
-              ml='md'
-              mr='md'
-              style={{
-                height: "1rem",
-                alignSelf: "center",
-              }}
-            />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "20px",
+            }}
+          >
+            <Image src={QRCode} width={150} />
+            <Text mt="sm" fz="16px" fw={600}>
+              Scan QR for details
+            </Text>
+          </div>
+          <Divider
+            orientation='horizontal'
+            size="xs"
+            ml='md'
+            mr='md'
+            style={{
+              height: "1rem",
+              alignSelf: "center",
+            }}
+          />
 
           <div
             style={{
@@ -192,24 +193,24 @@ const Alertpage = () => {
               <Text fw={700} fz="22px" mt="md">Tag ID</Text> */}
               {/* <Text fw={700} fz="22px" mt="md">Location</Text> */}
               <h1>Location</h1>
-          {location && (
-            <a
-              href={location}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-2 text-blue-500 hover:text-blue-700"
-            >
-              {/* <FaMapMarkerAlt size={24} /> */}
-              <Button style={{width:"100%"}}>Click here</Button>
-            </a>
-          )}
+              {location && (
+                <a
+                  href={location}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-2 text-blue-500 hover:text-blue-700"
+                >
+                  {/* <FaMapMarkerAlt size={24} /> */}
+                  <Button style={{ width: "100%" }}>Click here</Button>
+                </a>
+              )}
             </div>
 
 
-            
 
 
-            
+
+
           </div>
         </Card>
       </Modal>
